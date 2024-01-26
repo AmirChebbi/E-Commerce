@@ -37,5 +37,5 @@ public class SubCategory {
 
 
     @OneToMany(mappedBy = "subCategory" , cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-    private List<Product> articles = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 }

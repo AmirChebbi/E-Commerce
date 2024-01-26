@@ -30,10 +30,6 @@ public class Order {
     @Column(name ="id" ,unique = true , nullable = false)
     private long id;
 
-
-    @Column(name = "delivered" , nullable = false)
-    private boolean delivered = false;
-
     @Column(name = "address" , nullable = false)
     private String address;
 
