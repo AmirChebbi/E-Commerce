@@ -37,4 +37,10 @@ public class FileData {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "article_id")
     private Product product;
+
+    public FileData(String name, String type, String filePath) {
+        this.name = name;
+        this.type = type;
+        this.filePath = filePath;
+    }
 }

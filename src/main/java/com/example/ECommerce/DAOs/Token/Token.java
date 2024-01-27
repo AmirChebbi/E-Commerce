@@ -42,5 +42,11 @@ public class Token {
     private UserEntity userEntity;
 
 
-
+    public Token(String token, TokenType tokenType, boolean revoked, boolean expired, UserEntity userEntity) {
+        this.token = token;
+        this.tokenType = tokenType;
+        this.revoked = revoked;
+        this.expired = expired;
+        this.userEntity = userEntity;
+    }
 }

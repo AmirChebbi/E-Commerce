@@ -1,5 +1,6 @@
 package com.example.ECommerce.DAOs.Product;
 
+import com.example.ECommerce.DAOs.File.FileData;
 import com.example.ECommerce.DAOs.Option.Option;
 import com.example.ECommerce.DAOs.SubCategory.SubCategory;
 import jakarta.persistence.*;
@@ -48,5 +49,8 @@ public class Product {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
+
+    @OneToMany
+    private List<FileData> files;
 
 }
