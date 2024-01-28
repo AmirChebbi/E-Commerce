@@ -86,7 +86,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 throw new InvalidTokenException("Invalid token");
             }
 
-
             if (!jwtService.isTokenValid(jwtToken, userEntity) || !isTokenValid || !userEntity.isEnabled()) {
                 filterChain.doFilter(request, response);
                 return;

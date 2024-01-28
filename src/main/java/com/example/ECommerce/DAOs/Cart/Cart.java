@@ -35,5 +35,11 @@ public class Cart {
     @Column(nullable = false)
     private float totalPrice =0f;
 
+    @Column(nullable = false)
+    private boolean isConfirmed,isSubmitted;
 
+    public Cart(UserEntity userEntity, List<Order> orders) {
+        this.userEntity = userEntity;
+        this.orders = orders;
+    }
 }

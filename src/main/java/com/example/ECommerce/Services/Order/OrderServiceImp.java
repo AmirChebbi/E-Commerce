@@ -92,4 +92,9 @@ public class OrderServiceImp  implements  OrderService{
                 () -> new ResourceNotFoundException(String.format("The Order with ID : %d could not be found in our system." , orderId))
         );
     }
+
+    @Override
+    public List<Order> fetchAllCartOrders(long cartId) {
+        return orderRepository.fetchAllCartOrders(cartId);
+    }
 }
