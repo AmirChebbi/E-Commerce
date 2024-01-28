@@ -11,7 +11,7 @@ public interface OptionService {
     public ResponseEntity<Object> updateOption(OptionDTO optionDTO);
     public ResponseEntity<Object> getOptionById(long optionId);
     public ResponseEntity<Object> getAllOptions(long pageNumber);
-    public ResponseEntity<Object> getAllProductOptions(long pageNumber);
+    public ResponseEntity<Object> getAllProductOptions(long productId);
     public ResponseEntity<Object> addOptionToOrder(long optionId, long orderId);
 
 }

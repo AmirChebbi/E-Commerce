@@ -11,7 +11,6 @@ public record ProductDTO (
         long id,
         String title ,
         float price,
-        long quantity,
         String layoutDescription,
         String reference,
         List<OptionDTO> options,

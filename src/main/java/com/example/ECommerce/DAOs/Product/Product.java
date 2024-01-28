@@ -34,9 +34,6 @@ public class Product {
     @Column(name = "price", nullable = false)
     private float price;
 
-    @Column(name = "quantity" , nullable = false)
-    private long quantity;
-
     @Column(name = "layout_description", nullable = false)
     private String layoutDescription;
 
