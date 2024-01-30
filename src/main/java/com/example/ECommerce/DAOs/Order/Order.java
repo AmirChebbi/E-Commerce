@@ -30,9 +30,6 @@ public class Order {
     @Column(name ="id" ,unique = true , nullable = false)
     private long id;
 
-    @Column(name = "address" , nullable = false)
-    private String address;
-
     @Column(name = "total_price", nullable = false)
     private  float price = 0f;
 
@@ -48,4 +45,11 @@ public class Order {
     @OneToOne
     private UserEntity user;
 
+    public Order(float price, Product product, List<Option> options, Cart cart, UserEntity user) {
+        this.price = price;
+        this.product = product;
+        this.options = options;
+        this.cart = cart;
+        this.user = user;
+    }
 }

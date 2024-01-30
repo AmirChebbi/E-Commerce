@@ -1,6 +1,7 @@
 package com.example.ECommerce.Services.SubCategory;
 
 
+import com.example.ECommerce.DAOs.File.FileData;
 import com.example.ECommerce.DAOs.Product.Product;
 import com.example.ECommerce.DAOs.SubCategory.SubCategory;
 import com.example.ECommerce.DTOs.Product.ProductDTO;
@@ -83,7 +84,7 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
     }
 
     @Override
-    public ResponseEntity<Object> fetchArticleFromSubCategory(final long subCategoryId , final long pageNumber) {
+    public ResponseEntity<Object> fetchProductsFromSubCategory(final long subCategoryId , final long pageNumber) {
 
         final int pageLength = 10;
         final int startIndex = (int) (pageLength * (pageNumber - 1));
@@ -92,15 +93,15 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
         final List<Product> currentArticles = currentSubCategory.getProducts().stream().skip(startIndex).limit(10).toList();
         if(currentArticles.size() == 0 && pageNumber > 1)
         {
-            return fetchArticleFromSubCategory(subCategoryId , 1);
+            return fetchProductsFromSubCategory(subCategoryId , 1);
         }
         final List<ProductDTO> articles = productService.mapToDTOList(currentArticles);
 
         return ResponseHandler.generateResponse(articles , HttpStatus.OK , articles.size() , currentSubCategory.getProducts().size());
     }
-/*
+
     @Override
-    public ResponseEntity<Object> addArticleToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String articleJson) throws IOException {
+    public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String articleJson) throws IOException {
 
 
         final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
@@ -110,25 +111,25 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
         {
             chapter.setProduct(product);
         }
-        for(var detail : product.getDetails())
+        for(var detail : product.getOptions())
         {
-            detail.setArticle(article);
+            detail.setProduct(product);
         }
-        article.setSubCategory(currentSubCategory);
+        product.setSubCategory(currentSubCategory);
 
         final List<FileData> images  = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             FileData image = fileService.processUploadedFile(multipartFile);
-            image.setArticle(article);
+            image.setProduct(product);
             images.add(image);
         }
-        article.setFiles(images);
-        currentSubCategory.getArticles().add(article);
+        product.setFiles(images);
+        currentSubCategory.getProducts().add(product);
         subCategoryRepository.save(currentSubCategory);
 
-        final String successResponse = String.format("The Article with TITLE : %s added successfully",article.getTitle());
+        final String successResponse = String.format("The Article with TITLE : %s added successfully",product.getTitle());
         return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
-    }*/
+    }
 
     @Override
     public SubCategoryDTO mapToDTOItem(SubCategory subCategory) {

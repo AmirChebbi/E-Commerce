@@ -16,12 +16,12 @@ public interface SubCategoryService {
     public ResponseEntity<Object> deleteSubCategory(final long subCategoryId);
     public ResponseEntity<Object> fetchSubCategoryById(final long subCategoryId);
     public ResponseEntity<Object> fetchAllSubCategory();
-    public ResponseEntity<Object> fetchArticleFromSubCategory(final long subCategoryId , final long pageNumber);
-   /* public ResponseEntity<Object> addArticleToSubCategoryById(
+    public ResponseEntity<Object> fetchProductsFromSubCategory(final long subCategoryId , final long pageNumber);
+    public ResponseEntity<Object> addProductToSubCategoryById(
             long subCategoryId ,
             final @NotNull List<MultipartFile> multipartFiles,
             @NotNull final String articleJson
-    ) throws IOException;*/
+    ) throws IOException;
 
 
 

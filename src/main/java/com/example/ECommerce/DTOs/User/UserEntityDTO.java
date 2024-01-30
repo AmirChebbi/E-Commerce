@@ -12,7 +12,6 @@ public record UserEntityDTO (
         String lastName,
         String email,
         String address,
-        String company,
         String phoneNumber,
         Date creationDate,
         boolean isEnabled,

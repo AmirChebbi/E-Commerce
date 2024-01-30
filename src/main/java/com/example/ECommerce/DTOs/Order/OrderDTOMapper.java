@@ -14,12 +14,11 @@ public class OrderDTOMapper implements Function<Order, OrderDTO> {
     public OrderDTO apply(Order order) {
         return new OrderDTO(
                 order.getId(),
-                order.getAddress(),
                 order.getPrice(),
                 new ProductDTOMapper().apply(order.getProduct()),
                 order.getOptions().stream().map(new OptionDTOMapper()).toList(),
                 order.getCart().getId(),
-                order.getUser().getId()
+                order.getUser().getEmail()
         );
     }
 }

@@ -5,6 +5,7 @@ import com.example.ECommerce.DAOs.Order.Order;
 import com.example.ECommerce.DAOs.Product.Product;
 import com.example.ECommerce.DTOs.Option.OptionDTO;
 import com.example.ECommerce.DTOs.Option.OptionDTOMapper;
+import com.example.ECommerce.DTOs.Order.OrderDTO;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
 import com.example.ECommerce.Exceptions.UnauthorizedActionException;
 import com.example.ECommerce.Repositories.OptionRepository;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class OptionServiceImpl implements OptionService{
@@ -111,5 +113,14 @@ public class OptionServiceImpl implements OptionService{
         } else {
             throw new UnauthorizedActionException("Option already added");
         }
+    }
+
+    @Override
+    public List<Option> getOrderOptions(List<OptionDTO> optionDTOs) {
+        List<Option> options = new ArrayList<>();
+        for (OptionDTO optionDTO : optionDTOs){
+            options.add(optionRepository.findById(optionDTO.id()).orElseThrow(()->new ResourceNotFoundException(String.format("Option with id %d doesn't exist",optionDTO.id()))));
+        }
+        return options;
     }
 }

@@ -25,4 +25,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     long getTotalOrderCountByUser(@Param("userId") final UUID userId);
     @Query(value = "select o from Order o where o.cart.id=:cartId")
     List<Order> fetchAllCartOrders(@Param("cartId")long cartId);
+
+    @Query(value = "select o from Order o where o.user.email=:email")
+    List<Order> findByUser(@Param("email") String email);
 }

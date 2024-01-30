@@ -1,6 +1,5 @@
 package com.example.ECommerce.DAOs.User;
 
-import com.example.ECommerce.DAOs.Company.Company;
 import com.example.ECommerce.DAOs.Role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,9 +39,6 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "email" , unique = true , nullable = false)
     private String email;
-
-    @ManyToOne
-    private Company company;
 
     @Column(name = "phone_number", unique = true , nullable = false)
     private String phoneNumber;
