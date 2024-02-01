@@ -1,6 +1,5 @@
 package com.example.ECommerce.DTOs.Category;
 
-
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTO;
 
 import java.util.List;
@@ -10,5 +9,4 @@ public record CategoryDTO (
         String title,
         List<SubCategoryDTO> subCategories
 ){
-
 }

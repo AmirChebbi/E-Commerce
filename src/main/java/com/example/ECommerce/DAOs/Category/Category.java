@@ -32,6 +32,8 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade =  CascadeType.ALL , fetch = FetchType.EAGER)
     private List<SubCategory> subCategories;
 
-
-
+    public Category(String title, List<SubCategory> subCategories) {
+        this.title = title;
+        this.subCategories = subCategories;
+    }
 }

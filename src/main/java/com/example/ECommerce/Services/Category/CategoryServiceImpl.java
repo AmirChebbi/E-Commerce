@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,9 +33,12 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public ResponseEntity<Object> createCategory(@NotNull final Category category) {
-        final Category currentCategory = categoryRepository.save(category);
-        final CategoryDTO categoryDTO = categoryDTOMapper.apply(currentCategory);
+    public ResponseEntity<Object> createCategory(@NotNull final CategoryDTO categoryDTO) {
+        List<SubCategory> subCategories = new ArrayList<>();
+        final Category currentCategory = categoryRepository.save(new Category(
+                categoryDTO.title(),
+                subCategories));
+        final CategoryDTO returnDTO = categoryDTOMapper.apply(currentCategory);
         return ResponseHandler.generateResponse(categoryDTO,HttpStatus.CREATED);
     }
 

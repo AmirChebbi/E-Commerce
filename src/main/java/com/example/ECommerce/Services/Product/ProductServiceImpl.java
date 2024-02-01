@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<Object> updateProductById(final long productId, @NotNull String productJson) throws IOException {
+    public ResponseEntity<Object> updateProductById(final long productId, @NotNull ProductDTO productDTO) throws IOException {
 
         return null;
     }
@@ -100,7 +100,8 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<Object> fetchAllArticle(final long pageNumber) {
         final Pageable pageable = PageRequest.of((int) pageNumber - 1, 10);
 
-        final List<ProductDTO> productDTOS = productRepository.fetchAllProducts(pageable).stream().map(productDTOMapper).toList();
+        //final List<ProductDTO> productDTOS = productRepository.fetchAllProducts(pageable).stream().map(productDTOMapper).toList();
+        final List<ProductDTO> productDTOS = productRepository.findAll().stream().map(productDTOMapper).toList();
         if(productDTOS.isEmpty() && pageNumber > 1)
         {
             return fetchAllArticle(1);

@@ -8,6 +8,7 @@ import com.example.ECommerce.DTOs.Product.ProductDTO;
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTO;
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTOMapper;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
+import com.example.ECommerce.Repositories.ProductRepository;
 import com.example.ECommerce.Repositories.SubCategoryRepository;
 import com.example.ECommerce.Services.File.FileService;
 import com.example.ECommerce.Services.Product.ProductService;
@@ -30,13 +31,15 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
     private final SubCategoryRepository subCategoryRepository;
     private final SubCategoryDTOMapper subCategoryDTOMapper;
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     private final FileService fileService;
 
-    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, SubCategoryDTOMapper subCategoryDTOMapper, com.example.ECommerce.Services.Product.ProductService productService, FileService fileService) {
+    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, SubCategoryDTOMapper subCategoryDTOMapper, ProductService productService, ProductRepository productRepository, FileService fileService) {
         this.subCategoryRepository = subCategoryRepository;
         this.subCategoryDTOMapper = subCategoryDTOMapper;
         this.productService = productService;
+        this.productRepository = productRepository;
         this.fileService = fileService;
     }
 
@@ -100,13 +103,28 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
         return ResponseHandler.generateResponse(articles , HttpStatus.OK , articles.size() , currentSubCategory.getProducts().size());
     }
 
+  /*  @Override
+    public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String articleJson) throws IOException {
+        final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
+        final Product product = new ObjectMapper().readValue(articleJson , Product.class);
+        currentSubCategory.getProducts().add(product);
+        subCategoryRepository.save(currentSubCategory);
+        int index = currentSubCategory.getProducts().indexOf(product);
+        Product savedProduct = productRepository.findById(currentSubCategory.getProducts().get(index).getId()).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist !"));
+        for (MultipartFile multipartFile : multipartFiles){
+            productService.addImageToProduct(savedProduct.getId(), multipartFile);
+        }
+        final String successResponse = String.format("The Article with TITLE : %s added successfully",product.getTitle());
+        return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
+    }*/
+
     @Override
     public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String articleJson) throws IOException {
 
 
         final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
         final Product product = new ObjectMapper().readValue(articleJson , Product.class);
-
+/*
         for(var chapter : product.getOptions())
         {
             chapter.setProduct(product);
@@ -114,18 +132,18 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
         for(var detail : product.getOptions())
         {
             detail.setProduct(product);
-        }
+        }*/
+        currentSubCategory.getProducts().add(product);
         product.setSubCategory(currentSubCategory);
-
+        subCategoryRepository.save(currentSubCategory);
+        Product savedProduct = productRepository.findByTitleAndReference(product.getTitle(),product.getReference()).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist !"));
         final List<FileData> images  = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             FileData image = fileService.processUploadedFile(multipartFile);
-            image.setProduct(product);
+            image.setProduct(savedProduct);
             images.add(image);
         }
         product.setFiles(images);
-        currentSubCategory.getProducts().add(product);
-        subCategoryRepository.save(currentSubCategory);
 
         final String successResponse = String.format("The Article with TITLE : %s added successfully",product.getTitle());
         return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
@@ -140,6 +158,7 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
     public List<SubCategoryDTO> mapToDTOList(List<SubCategory> subCategories) {
         return subCategories.stream().map(subCategoryDTOMapper).toList();
     }
+
 
     @Override
     public SubCategory getSubCategoryById(final long subCategoryId) {

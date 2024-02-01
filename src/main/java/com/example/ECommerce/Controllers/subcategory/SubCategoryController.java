@@ -2,6 +2,7 @@ package com.example.ECommerce.Controllers.subcategory;
 
 
 import com.example.ECommerce.DAOs.SubCategory.SubCategory;
+import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTO;
 import com.example.ECommerce.Services.SubCategory.SubCategoryService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +49,8 @@ public class SubCategoryController {
         return subCategoryService.fetchSubCategoryById(subcategoryId);
     }
 
-    @GetMapping("/{subcategoryId}/articles")
-    public ResponseEntity<Object> fetchArticleFromSubCategory(
+    @GetMapping("/{subcategoryId}/products")
+    public ResponseEntity<Object> fetchProductFromSubCategory(
             @PathVariable("subcategoryId") final long subcategoryId,
             @RequestParam(value = "pageNumber" ,required = true) final long pageNumber
         )
@@ -57,13 +58,12 @@ public class SubCategoryController {
         return subCategoryService.fetchProductsFromSubCategory(subcategoryId , pageNumber);
     }
 
-    @PutMapping("/{subcategoryId}/articles")
-    public ResponseEntity<Object>  addArticleToSubCategory(
+    @PutMapping("/{subcategoryId}/products")
+    public ResponseEntity<Object>  addProductToSubCategory(
             @PathVariable("subcategoryId") final long subcategoryId,
-            @RequestParam("images") List<MultipartFile> multipartFiles,
+            @RequestParam("multipartFiles") List<MultipartFile> multipartFiles,
             @RequestParam(value = "articleJson" , required = true) final String articleJson
     ) throws IOException {
         return subCategoryService.addProductToSubCategoryById(subcategoryId,multipartFiles,articleJson);
     }
-
 }

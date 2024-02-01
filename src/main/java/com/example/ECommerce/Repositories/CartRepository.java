@@ -19,12 +19,12 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query(value = "select count(c) from Cart c")
     long getAllCartsCount();
 
-    @Query(value = "select c from Cart c where c.userEntity.email=:email and c.id=:cartId")
+    @Query(value = "select c from Cart c where c.id=:cartId  and c.userEntity.email=:email ")
     Optional<Cart> findByIdAndUser(@Param("cartId") long cartId, @Param("email") String email);
-    @Query(value = "select c from Cart c where c.isSubmitted=:true")
-    List<Cart> fetchAllSubmittedCarts(Pageable pageable);
-    @Query(value = "select count(c) from Cart c where c.isSubmitted=:true")
-    long getSubmittedCartCount();
-    @Query(value = "select c from Cart c where c.id=:cartId and c.isSubmitted=:true")
-    Optional<Cart> findByIdAndSubmission(@Param("cartId") long cartId);
+    @Query(value = "select c from Cart c where c.isSubmitted=:isSubmitted")
+    List<Cart> fetchAllSubmittedCarts(Pageable pageable, @Param("isSubmitted") boolean isSubmitted);
+    @Query(value = "select count(c) from Cart c where c.isSubmitted=:isSubmitted")
+    long getSubmittedCartCount(@Param("isSubmitted") boolean isSubmitted);
+    @Query(value = "select c from Cart c where c.id=:cartId and c.isSubmitted=:isSubmitted")
+    Optional<Cart> findByIdAndSubmission(@Param("cartId") long cartId, @Param("isSubmitted") boolean isSubmitted);
 }

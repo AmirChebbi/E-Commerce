@@ -3,6 +3,8 @@ package com.example.ECommerce.Controllers.Category;
 
 import com.example.ECommerce.DAOs.Category.Category;
 import com.example.ECommerce.DAOs.SubCategory.SubCategory;
+import com.example.ECommerce.DTOs.Category.CategoryDTO;
+import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTO;
 import com.example.ECommerce.Services.Category.CategoryService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +21,11 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping()
-    public ResponseEntity<Object> createCategory(@NotNull @Valid @RequestBody final Category category)
+    @PostMapping("/create")
+    public ResponseEntity<Object> createCategory(@NotNull @Valid @RequestBody final CategoryDTO categoryDTO)
     {
-        return categoryService.createCategory(category);
+        return categoryService.createCategory(categoryDTO);
     }
-
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable("categoryId")final long categoryId, @NotNull @Valid @RequestBody final Category categoryDetails)

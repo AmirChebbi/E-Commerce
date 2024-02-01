@@ -1,4 +1,5 @@
 package com.example.ECommerce.Controllers.Product;
+import com.example.ECommerce.DTOs.Product.ProductDTO;
 import com.example.ECommerce.Services.Product.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/v1/articles")
+@RequestMapping("api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -16,38 +17,38 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/{articleId}")
-    public ResponseEntity<Object> fetchArticleById(@PathVariable("articleId") final long articleId)
+    @GetMapping("/{productId}")
+    public ResponseEntity<Object> fetchProductById(@PathVariable("productId") final long productId)
     {
-        return productService.fetchProductById(articleId);
+        return productService.fetchProductById(productId);
     }
-    @PutMapping("/{articleId}")
-    public  ResponseEntity<Object> updateArticleById(
-            @PathVariable("articleId") final long articleId,
-            @RequestParam(value = "articleJson", required = true) final String articleJson
-    ) throws IOException {
-        return productService.updateProductById(articleId , articleJson);
+    @PutMapping("/{productId}")
+    public  ResponseEntity<Object> updateProductById(
+            @PathVariable("productId") final long productId,
+            @RequestBody(required = true) final ProductDTO productDTO
+            ) throws IOException {
+        return productService.updateProductById(productId , productDTO);
     }
-    @PutMapping("/{articleId}/images")
-    public ResponseEntity<Object> addImageToArticle(@PathVariable("articleId") final long articleId , @RequestParam(value = "image" , required = true) final MultipartFile multipartFile) throws IOException {
-        return productService.addImageToProduct(articleId, multipartFile);
+    @PutMapping("/{productId}/images")
+    public ResponseEntity<Object> addImageToProduct(@PathVariable("productId") final long productId , @RequestParam(value = "image" , required = true) final MultipartFile multipartFile) throws IOException {
+        return productService.addImageToProduct(productId, multipartFile);
     }
-    @DeleteMapping("/{articleId}/images/{imageId}")
-    public ResponseEntity<Object> removeImageFromArticle(@PathVariable("articleId") final long articleId , @PathVariable("imageId") final long imageId) throws IOException {
-        return productService.removeImageFromProduct(articleId, imageId);
+    @DeleteMapping("/{productId}/images/{imageId}")
+    public ResponseEntity<Object> removeImageFromProduct(@PathVariable("productId") final long productId , @PathVariable("imageId") final long imageId) throws IOException {
+        return productService.removeImageFromProduct(productId, imageId);
     }
-    @DeleteMapping("/{articleId}")
-    public ResponseEntity<Object> deleteArticleById(@PathVariable("articleId") final long articleId) throws IOException {
-        return productService.deleteProductById(articleId);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Object> deleteProductById(@PathVariable("productId") final long productId) throws IOException {
+        return productService.deleteProductById(productId);
     }
-    @GetMapping()
-    public  ResponseEntity<Object> fetchAllArticles(@RequestParam("pageNumber") final long pageNumber)
+    @GetMapping("/getAll")
+    public  ResponseEntity<Object> fetchAllProducts(@RequestParam("pageNumber") final long pageNumber)
     {
         return productService.fetchAllArticle(pageNumber);
     }
-    @GetMapping("/{articleId}/images/{fileIndex}")
-    public ResponseEntity<byte[]>  fetchImageFromArticle(@PathVariable("articleId") final long articleId ,@PathVariable("fileIndex") final int fileIndex) throws IOException {
-        return productService.fetchImageFromProduct(articleId , fileIndex);
+    @GetMapping("/{productId}/images/{fileIndex}")
+    public ResponseEntity<byte[]>  fetchImageFromProduct(@PathVariable("productId") final long productId , @PathVariable("fileIndex") final int fileIndex, @PathVariable String articleId) throws IOException {
+        return productService.fetchImageFromProduct(productId , fileIndex);
     }
 
 }

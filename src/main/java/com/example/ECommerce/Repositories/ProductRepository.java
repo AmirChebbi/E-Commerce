@@ -22,10 +22,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p from Product p where p.id = :productId")
     Optional<Product> fetchProductById(@Param("productId") final long productId);
 
-    @Query(value = "select p from Product p order by p.id")
+    @Query(value = "select p from Product p")
     List<Product> fetchAllProducts(Pageable pageable);
 
-    @Query(value = "select count(a) from Product a")
+    @Query(value = "select count(p) from Product p")
     long getTotalProductCount();
 
     @Modifying
@@ -39,4 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void deleteAllProducts(@Param("products") List<Product> products);
 
 
+    @Query(value = "select p from Product p where p.title=:title and p.reference=:reference")
+    Optional<Product> findByTitleAndReference(@Param("title")String title, @Param("reference") String reference);
 }

@@ -94,8 +94,8 @@ public class CartServiceImpl implements CartService{
     @Override
     public ResponseEntity<Object> fetchAllSubmittedCarts(long pageNumber) {
         final Pageable pageable = PageRequest.of((int) pageNumber, 8);
-        List<Cart> carts = cartRepository.fetchAllSubmittedCarts(pageable);
-        return ResponseHandler.generateResponse(carts,HttpStatus.OK,carts.size(), cartRepository.getAllCartsCount());
+        List<Cart> carts = cartRepository.fetchAllSubmittedCarts(pageable,true);
+        return ResponseHandler.generateResponse(carts,HttpStatus.OK,carts.size(), cartRepository.getSubmittedCartCount(true));
     }
 
     //Get back to it with EmailSenderService
@@ -110,7 +110,7 @@ public class CartServiceImpl implements CartService{
     //Get back to it with EmailSenderService
     @Override
     public ResponseEntity<Object> confirmCart(long cartId) {
-        Cart cart = cartRepository.findByIdAndSubmission(cartId).orElseThrow(()-> new ResourceNotFoundException(String.format("Cart with Id %d doesn't exist",cartId)));
+        Cart cart = cartRepository.findByIdAndSubmission(cartId,true).orElseThrow(()-> new ResourceNotFoundException(String.format("Cart with Id %d doesn't exist",cartId)));
         cart.setConfirmed(true);
         cartRepository.save(cart);
         return ResponseHandler.generateResponse("Confirmation saved successfully",HttpStatus.OK);

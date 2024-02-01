@@ -3,13 +3,14 @@ package com.example.ECommerce.Services.Category;
 
 import com.example.ECommerce.DAOs.Category.Category;
 import com.example.ECommerce.DAOs.SubCategory.SubCategory;
+import com.example.ECommerce.DTOs.Category.CategoryDTO;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 
 
 public interface CategoryService {
 
-    ResponseEntity<Object> createCategory(@NotNull final Category category);
+    ResponseEntity<Object> createCategory(@NotNull final CategoryDTO categoryDTO);
     ResponseEntity<Object> updateCategory(final long categoryId , @NotNull final Category category);
     ResponseEntity<Object> deleteCategoryById(final long categoryId);
     ResponseEntity<Object> addSubCategory(final long categoryId, @NotNull final SubCategory subCategory);
