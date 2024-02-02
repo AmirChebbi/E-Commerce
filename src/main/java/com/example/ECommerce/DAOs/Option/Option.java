@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table
+@Entity
+@Table(name = "options")
 public class Option {
     @SequenceGenerator(
             name = "option_sequence",
@@ -23,6 +23,7 @@ public class Option {
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE ,
             generator = "option_sequence")
+    @Column(name = "id")
     private long id;
 
     @Column(name = "title", nullable = false)

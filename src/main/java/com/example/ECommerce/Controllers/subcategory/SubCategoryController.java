@@ -62,8 +62,8 @@ public class SubCategoryController {
     public ResponseEntity<Object>  addProductToSubCategory(
             @PathVariable("subcategoryId") final long subcategoryId,
             @RequestParam("multipartFiles") List<MultipartFile> multipartFiles,
-            @RequestParam(value = "articleJson" , required = true) final String articleJson
+            @RequestParam(value = "productJson" , required = true) final String productJson
     ) throws IOException {
-        return subCategoryService.addProductToSubCategoryById(subcategoryId,multipartFiles,articleJson);
+        return subCategoryService.addProductToSubCategoryById(subcategoryId,multipartFiles,productJson);
     }
 }

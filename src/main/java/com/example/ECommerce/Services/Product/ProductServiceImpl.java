@@ -133,4 +133,9 @@ public class ProductServiceImpl implements ProductService {
                 () -> new ResourceNotFoundException(String.format("The Product with ID : %d could not be found in our system", productId))
         );
     }
+
+    @Override
+    public Product findByTitleAndReference(String title, String reference) {
+        return productRepository.findByTitleAndReference(title,reference).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist !"));
+    }
 }

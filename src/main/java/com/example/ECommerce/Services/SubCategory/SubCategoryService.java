@@ -20,7 +20,7 @@ public interface SubCategoryService {
     public ResponseEntity<Object> addProductToSubCategoryById(
             long subCategoryId ,
             final @NotNull List<MultipartFile> multipartFiles,
-            @NotNull final String articleJson
+            @NotNull final String productJson
     ) throws IOException;
 
 

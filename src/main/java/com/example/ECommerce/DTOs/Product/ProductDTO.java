@@ -13,7 +13,6 @@ public record ProductDTO (
         float price,
         String layoutDescription,
         String reference,
-        List<OptionDTO> options,
-        SubCategoryDTO subCategory
+        List<OptionDTO> options
 ){
 }

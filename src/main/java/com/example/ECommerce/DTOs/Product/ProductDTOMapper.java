@@ -17,8 +17,7 @@ public class ProductDTOMapper implements Function<Product, ProductDTO> {
                 product.getPrice(),
                 product.getReference(),
                 product.getLayoutDescription(),
-                product.getOptions().stream().map(new OptionDTOMapper()).toList(),
-                new SubCategoryDTOMapper().apply(product.getSubCategory())
+                product.getOptions().stream().map(new OptionDTOMapper()).toList()
         );
     }
 }
