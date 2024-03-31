@@ -21,11 +21,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> createCategory(@NotNull @Valid @RequestBody final CategoryDTO categoryDTO)
-    {
-        return categoryService.createCategory(categoryDTO);
-    }
+
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable("categoryId")final long categoryId, @NotNull @Valid @RequestBody final Category categoryDetails)
@@ -40,17 +36,26 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}/subcategories/{subCategoryId}")
-    public ResponseEntity<Object> removeSubCategory(@PathVariable("categoryId") final long categoryId, @PathVariable("subCategoryId") final long subCategoryId)
+    public ResponseEntity<Object> removeSubCategory(@PathVariable("categoryId") final long categoryId,
+                                                    @PathVariable("subCategoryId") final long subCategoryId)
     {
         return categoryService.removeSubCategory(categoryId,subCategoryId);
     }
-
+    @PostMapping("/create")
+    public ResponseEntity<Object> createCategory(@NotNull @Valid @RequestBody final CategoryDTO categoryDTO)
+    {
+        return categoryService.createCategory(categoryDTO);
+    }
     @GetMapping("/{categoryId}")
     public ResponseEntity<Object> fetchCategoryById(@PathVariable("categoryId") final long categoryId)
     {
         return categoryService.fetchCategoryById(categoryId);
     }
-
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable("categoryId")final long categoryId)
+    {
+        return categoryService.deleteCategoryById(categoryId);
+    }
     @GetMapping()
     public ResponseEntity<Object> fetchAllCategories()
     {
@@ -63,10 +68,6 @@ public class CategoryController {
         return categoryService.fetchAllSubCategoryInCategoryById(categoryId);
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable("categoryId")final long categoryId)
-    {
-        return categoryService.deleteCategoryById(categoryId);
-    }
+
 
 }

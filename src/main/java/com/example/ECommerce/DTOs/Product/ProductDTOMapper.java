@@ -1,6 +1,7 @@
 package com.example.ECommerce.DTOs.Product;
 
 import com.example.ECommerce.DAOs.Product.Product;
+import com.example.ECommerce.DTOs.File.FileDataDTOMapper;
 import com.example.ECommerce.DTOs.Option.OptionDTOMapper;
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTOMapper;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class ProductDTOMapper implements Function<Product, ProductDTO> {
                 product.getPrice(),
                 product.getReference(),
                 product.getLayoutDescription(),
-                product.getOptions().stream().map(new OptionDTOMapper()).toList()
+                product.getOptions().stream().map(new OptionDTOMapper()).toList(),
+                product.getFiles().stream().map(new FileDataDTOMapper()).toList()
         );
     }
 }

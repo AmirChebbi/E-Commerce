@@ -9,7 +9,6 @@ import com.example.ECommerce.DTOs.Product.ProductDTO;
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTO;
 import com.example.ECommerce.DTOs.SubCategory.SubCategoryDTOMapper;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
-import com.example.ECommerce.Repositories.ProductRepository;
 import com.example.ECommerce.Repositories.SubCategoryRepository;
 import com.example.ECommerce.Services.File.FileService;
 import com.example.ECommerce.Services.Product.ProductService;
@@ -101,44 +100,45 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
         return ResponseHandler.generateResponse(articles , HttpStatus.OK , articles.size() , currentSubCategory.getProducts().size());
     }
 
-  /*  @Override
-    public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String articleJson) throws IOException {
-        final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
-        final Product product = new ObjectMapper().readValue(articleJson , Product.class);
-        currentSubCategory.getProducts().add(product);
-        subCategoryRepository.save(currentSubCategory);
-        int index = currentSubCategory.getProducts().indexOf(product);
-        Product savedProduct = productRepository.findById(currentSubCategory.getProducts().get(index).getId()).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist !"));
-        for (MultipartFile multipartFile : multipartFiles){
-            productService.addImageToProduct(savedProduct.getId(), multipartFile);
+    @Override
+    public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String productJson){
+        try {
+
+            final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
+            final Product product = new ObjectMapper().readValue(productJson, Product.class);
+            if (!product.getOptions().isEmpty()) {
+                for (Option option : product.getOptions()) {
+                    option.setProduct(product);
+                }
+            }
+            currentSubCategory.getProducts().add(product);
+            product.setSubCategory(currentSubCategory);
+            List<FileData> images = new ArrayList<>();
+            for (MultipartFile multipartFile : multipartFiles) {
+                FileData image = fileService.processUploadedFile(multipartFile);
+                images.add(image);
+            }
+            product.setFiles(images);
+            subCategoryRepository.save(currentSubCategory);
+            final String successResponse = String.format("The Product with TITLE : %s added successfully", product.getTitle());
+            return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        final String successResponse = String.format("The Article with TITLE : %s added successfully",product.getTitle());
-        return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
-    }*/
+    }
 
     @Override
-    public ResponseEntity<Object> addProductToSubCategoryById(long subCategoryId, @NotNull List<MultipartFile> multipartFiles, @NotNull String productJson) throws IOException {
-        final SubCategory currentSubCategory = getSubCategoryById(subCategoryId);
-        final Product product = new ObjectMapper().readValue(productJson , Product.class);
-
-        for(Option option : product.getOptions())
-        {
-            option.setProduct(product);
+    public ResponseEntity<Object> deleteProductFromSubCategory(long subCategoryId, long productId) throws IOException {
+        Product productToDelete = productService.getProductById(productId);
+        SubCategory subCategory = getSubCategoryById(subCategoryId);
+        List<Product> productList = subCategory.getProducts();
+        productList.remove(productToDelete);
+        subCategory.setProducts(productList);
+        subCategoryRepository.save(subCategory);
+        if (!productService.deleteProductById(productToDelete)){
+            throw new IllegalStateException(String.format("Product with Id : &d could not be deleted !!", productId));
         }
-        currentSubCategory.getProducts().add(product);
-        product.setSubCategory(currentSubCategory);
-        subCategoryRepository.save(currentSubCategory);
-        Product savedProduct = productService.findByTitleAndReference(product.getTitle(),product.getReference());
-        final List<FileData> images  = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            FileData image = fileService.processUploadedFile(multipartFile);
-            image.setProduct(savedProduct);
-            images.add(image);
-        }
-        product.setFiles(images);
-
-        final String successResponse = String.format("The Product with TITLE : %s added successfully",product.getTitle());
-        return ResponseHandler.generateResponse(successResponse, HttpStatus.OK);
+        return ResponseHandler.generateResponse("Product deleted successfully", HttpStatus.OK);
     }
 
     @Override
@@ -158,6 +158,7 @@ public class SubCategoryServiceImpl implements  SubCategoryService{
                 () -> new ResourceNotFoundException(String.format("The Sub Category with ID : %d could not be found in our system.", subCategoryId))
         );
     }
+
 
     @Transactional
     @Override

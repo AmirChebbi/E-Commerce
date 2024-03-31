@@ -16,10 +16,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface SubCategoryRepository extends JpaRepository<SubCategory, Integer> {
 
+
     @Query(value = "select s from SubCategory s where s.id = :subCategoryId")
     Optional<SubCategory> fetchSubCategoryById(@Param("subCategoryId") final long subCategoryId);
-
-
 
     @Query(value = "select s from SubCategory s")
     List<SubCategory> fetchAllSubCategories();

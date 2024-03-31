@@ -1,8 +1,9 @@
 package com.example.ECommerce.Services.Product;
 
-
+import com.example.ECommerce.DAOs.Category.Category;
 import com.example.ECommerce.DAOs.File.FileData;
 import com.example.ECommerce.DAOs.Product.Product;
+import com.example.ECommerce.DAOs.SubCategory.SubCategory;
 import com.example.ECommerce.DTOs.Product.ProductDTO;
 import com.example.ECommerce.DTOs.Product.ProductDTOMapper;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
@@ -15,12 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static java.lang.String.format;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -43,25 +46,35 @@ public class ProductServiceImpl implements ProductService {
         final ProductDTO productDTO = productDTOMapper.apply(currentProduct);
         return ResponseHandler.generateResponse(productDTO , HttpStatus.OK);
     }
-
     @Override
     public ResponseEntity<Object> updateProductById(final long productId, @NotNull ProductDTO productDTO) throws IOException {
-
-        return null;
+        Product product = getProductById(productId);
+        if (productDTO.title() !=null) product.setTitle(productDTO.title());
+        if (productDTO.price() != 0) product.setPrice(productDTO.price());
+        if (productDTO.reference()!=null) product.setReference(product.getReference());
+        if (productDTO.layoutDescription()!=null) product.setLayoutDescription(productDTO.layoutDescription());
+        productRepository.save(product);
+        String successMessage = String.format("Product with Id &d was updated successfully", productId);
+        return ResponseHandler.generateResponse(successMessage,HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Object> deleteProductById(long productId) throws IOException {
-        return null;
+    public boolean deleteProductById(Product product) throws IOException {
+        productRepository.delete(product);
+        for (FileData fileData : product.getFiles()){
+            fileService.deleteFileFromFileSystem(fileData);
+        }
+        return true;
     }
 
     @Override
     public ResponseEntity<Object> addImageToProduct(long productId, @NotNull MultipartFile image) throws IOException {
-        final Product existingArticle =  getProductById(productId);
+        final Product existingProduct =  getProductById(productId);
         final FileData newImage = fileService.processUploadedFile(image);
-        newImage.setProduct(existingArticle);
-        productRepository.save(existingArticle);
-
+        List<FileData> files = existingProduct.getFiles();
+        files.add(newImage);
+        existingProduct.setFiles(files);
+        productRepository.save(existingProduct);
         final String successResponse ="The image is added successfully.";
         return ResponseHandler.generateResponse(successResponse , HttpStatus.OK);
     }
@@ -73,14 +86,13 @@ public class ProductServiceImpl implements ProductService {
 
         if(!existingProduct.getFiles().contains(existingImage))
         {
-            throw new IllegalStateException(String.format("The Image with ID : %d  does not belong to this article", imageId));
+            throw new IllegalStateException(format("The Image with ID : %d  does not belong to this product", imageId));
         }
 
         existingProduct.getFiles().remove(existingImage);
-        existingImage.setProduct(null);
-        fileService.deleteFileFromFileSystem(existingImage);
         productRepository.save(existingProduct);
-        final String successResponse = String.format("The image with ID : %d deleted successfully",imageId);
+        boolean delete = fileService.deleteFileFromFileSystem(existingImage);
+        final String successResponse = format("The image with ID : %d deleted successfully, file deleted for FS ? : %s",imageId ,delete);
         return ResponseHandler.generateResponse(successResponse , HttpStatus.OK);
     }
     @Override
@@ -94,7 +106,6 @@ public class ProductServiceImpl implements ProductService {
         final FileData fileData = product.getFiles().get(fileIndex);
         return fileService.downloadFile(fileData);
     }
-
 
     @Override
     public ResponseEntity<Object> fetchAllArticle(final long pageNumber) {
@@ -130,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(final long productId)
     {
         return productRepository.findById(productId).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("The Product with ID : %d could not be found in our system", productId))
+                () -> new ResourceNotFoundException(format("The Product with ID : %d could not be found in our system", productId))
         );
     }
 

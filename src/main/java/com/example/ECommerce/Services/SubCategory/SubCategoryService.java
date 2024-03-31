@@ -23,6 +23,8 @@ public interface SubCategoryService {
             @NotNull final String productJson
     ) throws IOException;
 
+    public ResponseEntity<Object> deleteProductFromSubCategory(final long subCategoryId, final long productId) throws IOException;
+
 
 
 

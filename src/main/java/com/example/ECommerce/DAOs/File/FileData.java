@@ -1,6 +1,5 @@
 package com.example.ECommerce.DAOs.File;
 
-import com.example.ECommerce.DAOs.Product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,9 +33,6 @@ public class FileData {
     @Column(name ="file_path")
     private String filePath;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "article_id")
-    private Product product;
 
     public FileData(String name, String type, String filePath) {
         this.name = name;

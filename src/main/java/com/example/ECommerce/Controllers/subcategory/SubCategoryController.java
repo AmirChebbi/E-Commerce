@@ -7,6 +7,7 @@ import com.example.ECommerce.Services.SubCategory.SubCategoryService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,14 @@ public class SubCategoryController {
             @NotNull @Valid @RequestBody SubCategory subCategory)
     {
         return subCategoryService.updateSubCategory(subcategoryId , subCategory);
+    }
+
+    @PutMapping("/{subcategoryId}/products/{productId}")
+    public ResponseEntity<Object> deleteProductFromSubCategoryById(
+            @PathVariable("subcategoryId") final long subcategoryId,
+            @PathVariable("productId") final long productId
+    ) throws IOException {
+        return subCategoryService.deleteProductFromSubCategory(subcategoryId,productId);
     }
 
     @DeleteMapping("/{subcategoryId}")

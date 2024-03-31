@@ -18,12 +18,12 @@ public interface FileDataRepository extends JpaRepository<FileData,Integer> {
 
 
     @Query(value = "select fd from FileData fd where fd.id = :id")
-    Optional<FileData> fetchFileDataById(long id);
+    Optional<FileData> fetchFileDataById(@Param("id") long id);
 
     @Transactional
     @Modifying
     @Query(value = "delete from FileData f where f.id = :id")
-    void deleteFileDataById(final long id);
+    void deleteFileDataById(@Param("id") final long id);
 
     @Transactional
     @Modifying

@@ -16,7 +16,7 @@ public interface ProductService {
 
     public ResponseEntity<Object> fetchProductById(final long productId);
     public ResponseEntity<Object> updateProductById(final long productId, @NotNull ProductDTO productDTO) throws IOException;
-    public ResponseEntity<Object> deleteProductById(final long productId) throws IOException;
+    public boolean deleteProductById(Product product) throws IOException;
     public ResponseEntity<Object> addImageToProduct(final long productId , @NotNull final MultipartFile image) throws IOException;
     public ResponseEntity<Object> removeImageFromProduct(final long productId , final long imageId) throws IOException;
     public ResponseEntity<byte[]>  fetchImageFromProduct(final long productId, final int fileIndex) throws IOException;

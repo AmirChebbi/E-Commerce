@@ -2,6 +2,7 @@ package com.example.ECommerce.Services.File;
 
 
 import com.example.ECommerce.DAOs.File.FileData;
+import com.example.ECommerce.DAOs.Product.Product;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
 import com.example.ECommerce.Repositories.FileDataRepository;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,7 @@ public class FileServiceImpl implements  FileService{
         return fileDataRepository.save(fileData);
     }
 
+    private final String  FILE_SYSTEM_PATH= Paths.get("").toAbsolutePath().resolve("src").resolve("main").resolve("resources").resolve("FileSystem").toString() + "/";
     @Transactional
     public void deleteFileById(final long fileId)
     {
@@ -45,15 +47,12 @@ public class FileServiceImpl implements  FileService{
         fileDataRepository.deleteFileDataById(fileId);
     }
 
-    private final String  FILE_SYSTEM_PATH= Paths.get("").toAbsolutePath().resolve("src").resolve("main").resolve("resources").resolve("FileSystem").toString() + "/";
-
     @Override
     public FileData processUploadedFile(@NotNull final MultipartFile file) throws IOException {
         var originalFileName = file.getOriginalFilename();
         var fileName = originalFileName.substring(0, originalFileName.indexOf('.'));
         var extension = originalFileName.substring(originalFileName.indexOf('.'));
         var filePath = FILE_SYSTEM_PATH + fileName + UUID.randomUUID() + extension;
-
         FileData fileData = new FileData(
                 file.getOriginalFilename(),
                 file.getContentType(),
@@ -76,15 +75,14 @@ public class FileServiceImpl implements  FileService{
     }
 
 
+
     @Override
     @Transactional
-    public void deleteFileFromFileSystem(@NotNull final FileData fileData) throws IOException {
+    public boolean deleteFileFromFileSystem(@NotNull final FileData fileData) throws IOException {
         File fileToDelete = new File(fileData.getFilePath());
-        if(!fileToDelete.delete())
-        {
-            throw new IOException(String.format("Failed to delete file with ID : %d",fileData.getId()));
-        }
+        boolean delete = fileToDelete.delete();
         fileDataRepository.deleteFileDataById(fileData.getId());
+        return delete;
     }
 
     @Override
@@ -100,6 +98,8 @@ public class FileServiceImpl implements  FileService{
         }
         fileDataRepository.deleteAllFiles(files);
     }
+
+
     public String determineContentType(@NotNull String filePath) {
 
         String extension = filePath.substring(filePath.lastIndexOf(".") + 1).toLowerCase();
@@ -108,10 +108,7 @@ public class FileServiceImpl implements  FileService{
         extensionToContentTypeMap.put("png", "image/png");
         extensionToContentTypeMap.put("jpg", "image/jpeg");
         extensionToContentTypeMap.put("jpeg", "image/jpeg");
-        extensionToContentTypeMap.put("gif", "image/gif");
-        extensionToContentTypeMap.put("bmp", "image/bmp");
         extensionToContentTypeMap.put("ico", "image/vnd.microsoft.icon");
-        extensionToContentTypeMap.put("tiff", "image/tiff");
         return extensionToContentTypeMap.getOrDefault(extension, "application/octet-stream");
     }
     public FileData getFileDataById(long fileDataId)

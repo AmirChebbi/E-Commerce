@@ -14,8 +14,7 @@ public class OptionDTOMapper implements Function<Option, OptionDTO> {
         return new OptionDTO(
                 option.getId(),
                 option.getTitle(),
-                option.getDescription(),
-                new ProductDTOMapper().apply(option.getProduct())
+                option.getDescription()
         );
     }
 }

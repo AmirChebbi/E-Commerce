@@ -43,11 +43,10 @@ public class Product {
     @OneToMany
     private List<Option> options;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<FileData> files;
-
 }
