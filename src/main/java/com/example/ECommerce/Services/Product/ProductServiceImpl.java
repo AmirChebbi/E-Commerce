@@ -1,9 +1,7 @@
 package com.example.ECommerce.Services.Product;
 
-import com.example.ECommerce.DAOs.Category.Category;
 import com.example.ECommerce.DAOs.File.FileData;
 import com.example.ECommerce.DAOs.Product.Product;
-import com.example.ECommerce.DAOs.SubCategory.SubCategory;
 import com.example.ECommerce.DTOs.Product.ProductDTO;
 import com.example.ECommerce.DTOs.Product.ProductDTOMapper;
 import com.example.ECommerce.Exceptions.ResourceNotFoundException;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 

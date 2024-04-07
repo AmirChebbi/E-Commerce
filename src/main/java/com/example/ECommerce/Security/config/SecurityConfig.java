@@ -1,6 +1,5 @@
 package com.example.ECommerce.Security.config;
 
-import com.example.ECommerce.DAOs.Role.Role;
 import com.example.ECommerce.Repositories.RoleRepository;
 import com.example.ECommerce.Security.jwt.JWTAuthenticationFilter;
 import com.example.ECommerce.Security.jwt.JwtAuthEntryPoint;
@@ -33,13 +32,11 @@ public class SecurityConfig {
 
     private final JwtAuthEntryPoint authEntryPoint;
     private final LogoutHandler logoutHandler;
-    private final RoleRepository roleRepository;
 
     @Autowired
     public SecurityConfig(JwtAuthEntryPoint authEntryPoint, LogoutHandler logoutHandler, RoleRepository roleRepository) {
         this.logoutHandler = logoutHandler;
         this.authEntryPoint = authEntryPoint;
-        this.roleRepository = roleRepository;
     }
 
     @Bean
@@ -56,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/subcategories/**").permitAll()
                 .requestMatchers("/api/v1/cart/**").permitAll()
                 .requestMatchers("/api/v1/order/**").permitAll()
+                .requestMatchers("/api/v1/products/**").permitAll()
 
                 .anyRequest().authenticated()
                 .and()
